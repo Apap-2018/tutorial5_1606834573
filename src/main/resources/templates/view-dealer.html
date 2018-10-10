@@ -5,18 +5,19 @@
 		<object th:include="fragments/fragment :: css" th:remove="tag"></object>
 		<object th:include="fragments/fragment :: js" th:remove="tag"></object>		
 	</head>
-
 	<body>
 		<nav th:replace="fragments/fragment :: navbar"></nav>
-		<h3 th:text="'Alamat: ' + ${dealer.alamat}"></h3>
-		<h3 th:text="'Telepon: ' + ${dealer.noTelp}"></h3>
-		<br>
-		<a th:href="@{/dealer/delete/{id}(id=${dealer.id})}">Delete dealer</a>
-		<a th:href="@{/dealer/update/{id}(id=${dealer.id})}">Update dealer</a>
 		
-		<h3 th:text="'List Mobil'"></h3>
-				<form th:action="@{/car/delete}" th:object="${dealer}" method="POST">
-			<table class="text-center">
+		<h3 th:text= "'Alamat: ' + ${dealer.alamat}"></h3>
+		<h3 th:text="'Telepon: ' + ${dealer.noTelp}"></h3>
+		
+		<form th:action="@{/dealer/delete}">
+			<input type="hidden" name="dealerId" th:value="${dealer.id}">
+			<button type="submit">Hapus Dealer</button>
+		</form>
+		<br>
+		<form th:action="@{/car/delete}" th:object="${dealer}" method="POST">
+			<table>
 				<thead>
 					<tr>
 						<th>No.</th>
@@ -24,29 +25,28 @@
 						<th>Type</th>
 						<th>Price</th>
 						<th>Amount</th>
-						<th>Delete</th>
-						<th>Update</th>
+						<th>Aksi</th>
 					</tr>
-				</thead>
+				</thead>		
 				<tbody>
-					<tr th:each="car,iterationStatus : *{listCar}">
+					<tr th:each="car, iterationStatus: *{listCar}">
 						<td th:text="${iterationStatus.count}"></td>
 						<td th:text="${car.brand}"></td>
 						<td th:text="${car.type}"></td>
-						<td th:text="${car.price} >= 100000 ? 'Di ats 100K' : 'Di bwh 100K'"></td>
+						<td th:text="${car.price} >= 1000000000 ? 'Diatas 1M' : 'Dibawah 1M'"></td>
 						<td th:text="${car.amount}"></td>
 						<td>
-							<input type="checkbox" th:field="*{listCar}" th:value="${car.id}" />
+							<input type="checkbox" th:field=*{listCar} th:value="${car.id}" />
 							<label th:for="${#ids.prev('listCar')}">Hapus</label>
 						</td>
-						<td><a th:href="@{/car/update/{id}(id=${car.id})}">Update car</a></td>
-					</tr>
+					</tr>				
 				</tbody>
 			</table>
 			<button type="submit">Hapus yang dipilih</button>
 		</form>
 		<br>
-		</br>
-		<a th:href="@{/car/add/{id}(id=${dealer.id})}">Add car</a>
+		<form th:action="@{/car/add/} + ${dealer.id}">
+			<button value="submit">Tambah Mobil</button>
+		<form>			
 	</body>
 </html>

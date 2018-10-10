@@ -1,0 +1,10 @@
+Perbedaan th:include dan th:replace
+
+a) th:include 
+Jika kita memiliki situasi <div th:include="..."> isi konten </div>, maka fragment akan diletakkan 
+di dalam tag <div> 
+
+b) th:replace
+
+Jika kita berada di dalam situasi <div th:replace="..."> isi konten </div> maka <div> 
+akan digantikan dengan konten

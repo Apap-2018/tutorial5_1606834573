@@ -44,7 +44,7 @@ public class DealerController {
 		DealerModel archiveDealer = dealerService.getDealerDetailById(dealerId).get();
 		/**
 		* Untuk mendapatkan list car terurut berdasarkan harga dengan Query
-		* Bisa jadi beberda dengan cara Anda
+		* Bisa jadi berbeda dengan cara Anda
 		*/
 		List<CarModel> archiveListCar = carService.getListCarOrderByPriceAsc(dealerId);
 		archiveDealer.setListCar(archiveListCar);
