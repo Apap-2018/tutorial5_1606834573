@@ -38,19 +38,51 @@ public class DealerController {
 		return "add";
 	}
 	
-	// Delete
-	@RequestMapping(value = "/dealer/delete", method = RequestMethod.GET)
-	private String deleteDealerById(@RequestParam("dealerIdDel") Long dealerIdDel, Model model) {
+	@RequestMapping(value = "/dealer/view", method = RequestMethod.GET)
+	private String viewDealer(@RequestParam(value = "dealerId") Long dealerId, Model model) {
+		DealerModel archiveDealer = dealerService.getDealerDetailById(dealerId).get();
+		/**
+		* Untuk mendapatkan list car terurut berdasarkan harga dengan Query
+		* Bisa jadi beberda dengan cara Anda
+		*/
+		List<CarModel> archiveListCar = carService.getListCarOrderByPriceAsc(dealerId);
+		archiveDealer.setListCar(archiveListCar);
+
+		model.addAttribute("dealer", archiveDealer);
+		model.addAttribute("listCar", archiveListCar);
+		return "view-dealer";
+	}
+
+	
+//	// Delete
+//	@RequestMapping(value = "/dealer/delete", method = RequestMethod.GET)
+//	private String deleteDealerById(@RequestParam("dealerIdDel") Long dealerIdDel, Model model) {
+//		dealerService.deleteDealer(dealerIdDel);
+//		return "delete";
+//	}
+	
+	@RequestMapping(value = "/dealer/delete/{dealerIdDel}")
+	private String deleteDealer(@PathVariable("dealerIdDel") Long dealerIdDel, Model model) {
 		dealerService.deleteDealer(dealerIdDel);
 		return "delete";
 	}
 	
 	// Update
-	@RequestMapping(value = "/dealer/update", method = RequestMethod.GET)
-	private String updateDealerById(@RequestParam("dealerIdUp") Long dealerIdUp, Model model, @RequestParam("dealerAlamatUp") String dealerAlamatUp, @RequestParam("dealerNoTelpUp") String dealerNoTelpUp) {
-		dealerService.updateDealer(dealerIdUp, dealerAlamatUp, dealerNoTelpUp);
+	@RequestMapping(value = "/dealer/update/{dealerIdUp}", method = RequestMethod.GET)
+	private String updateDealerById(@PathVariable("dealerIdUp") Long dealerIdUp, Model model) {
+		DealerModel dealerUp = dealerService.getDealerDetailById(dealerIdUp).get();
+		//dealerService.updateDealer(dealerIdUp, dealerAlamatUp, dealerNoTelpUp);		
+		model.addAttribute("dealerUp", dealerUp);
+		return "updateDealer";
+	}
+	
+	
+	@RequestMapping(value = "/dealer/update/{dealerIdUp}", method = RequestMethod.POST)
+	private String updateDealer(@ModelAttribute DealerModel dealerUp, @PathVariable("dealerIdUp") Long dealerIdUp, Model model) {
+		dealerService.updateDealer(dealerIdUp, dealerUp.getAlamat(), dealerUp.getNoTelp());		
 		return "update";
 	}
+	
 	
 	// View all dealer
 	@RequestMapping(value = "/dealer/view-all", method = RequestMethod.GET)

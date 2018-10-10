@@ -3,6 +3,8 @@ package com.apap.tutorial4.controller;
 import com.apap.tutorial4.model.*;
 import com.apap.tutorial4.service.*;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,12 +22,43 @@ public class CarController {
 	private DealerService dealerService;
 	
 	@RequestMapping(value = "/car/add/{dealerId}", method = RequestMethod.GET)
-	private String add (@PathVariable(value = "dealerId") Long dealerId, Model model) {
+	private String add(@PathVariable(value = "dealerId") Long dealerId, Model model) {
+		DealerModel dealer  = dealerService.getDealerDetailById(dealerId).get();
+		ArrayList<CarModel> list = new ArrayList<CarModel>();
+		list.add(new CarModel());
+		dealer.setListCar(list);
+		
 		CarModel car = new CarModel();
-		DealerModel dealer = dealerService.getDealerDetailById(dealerId).get();
 		car.setDealer(dealer);
 		
 		model.addAttribute("car", car);
+		model.addAttribute("dealer", dealer);
 		return "addCar";
 	}
+	
+	@RequestMapping(value = "/car/add", method = RequestMethod.POST)
+	private String addCarSubmit(@ModelAttribute CarModel car) {
+		carService.addCar(car);
+		return "add";
+	}
+	
+	@RequestMapping(value = "/car/update/{idCar}", method = RequestMethod.GET)
+	private String updateCar(@PathVariable(value = "idCar") Long carId, Model model) {
+		CarModel carOld = carService.getDetailCarById(carId).get();
+		model.addAttribute("carOld", carOld);
+		model.addAttribute("carNew", new CarModel());
+		return "updateCar";
+	}
+	
+	@RequestMapping(value = "/car/update/{idCar}", method = RequestMethod.POST)
+	private String updateCar(@ModelAttribute CarModel carNew, @PathVariable(value = "idCar") Long id) {
+		carService.updateCar(id, carNew);
+		return "update";
+	}
+	
+	@RequestMapping(value = "/car/delete/{idCar}", method = RequestMethod.GET)
+	private String deleteCar(@PathVariable(value = "idCar") Long carId) {
+		carService.deleteCarById(carId);
+		return "delete";
+	}	
 }

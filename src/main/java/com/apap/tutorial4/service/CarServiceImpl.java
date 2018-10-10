@@ -1,6 +1,7 @@
 package com.apap.tutorial4.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.apap.tutorial4.model.CarModel;
 import com.apap.tutorial4.repository.CarDb;
@@ -18,10 +19,19 @@ public class CarServiceImpl implements CarService {
 	@Autowired
 	private CarDb carDb;
 	
+	 @Override
+	 public Optional<CarModel> getDetailCarById(Long id) {
+		 return carDb.findById(id);
+	 }
 	
 	@Override
 	public void addCar(CarModel car) {
 		carDb.save(car);
+	}
+	
+	@Override
+	public List<CarModel> getListCarOrderByPriceAsc(Long dealerId) {
+		return carDb.findByDealerIdOrderByPriceAsc(dealerId);
 	}
 	
 	// Delete implementation
@@ -32,10 +42,16 @@ public class CarServiceImpl implements CarService {
 
 	// Update implementation
 	@Override
-	public void updateCar(Long carIdUp, String carBrandUp, String carTypeUp, Long carPriceUp, Integer carAmountUp) {
-		carDb.getOne(carIdUp).setBrand(carBrandUp);
-		carDb.getOne(carIdUp).setType(carTypeUp);
-		carDb.getOne(carIdUp).setPrice(carPriceUp);
-		carDb.getOne(carIdUp).setAmount(carAmountUp);		
-	}
+	 public void updateCar(Long id, CarModel carNew) {
+		 CarModel carOld = this.getDetailCarById(id).get();
+		 carOld.setBrand(carNew.getBrand());
+		 carOld.setType(carNew.getType());
+		 carOld.setPrice(carNew.getPrice());
+		 carOld.setAmount(carNew.getAmount());
+	 }
+	
+	// Delete implementation rev
+	 public void deleteCarById(Long id) {
+		 carDb.delete(this.getDetailCarById(id).get());
+	 }
 }

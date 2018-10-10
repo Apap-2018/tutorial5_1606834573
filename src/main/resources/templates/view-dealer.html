@@ -8,6 +8,9 @@
 		<h3 th:text="'Alamat: ' + ${dealer.alamat}"></h3>
 		<h3 th:text="'Telepon: ' + ${dealer.noTelp}"></h3>
 		<br>
+		<a th:href="@{/dealer/delete/{id}(id=${dealer.id})}">Delete dealer</a>
+		<a th:href="@{/dealer/update/{id}(id=${dealer.id})}">Update dealer</a>
+		
 		<h3 th:text="'List Mobil'"></h3>
 		<table border="1">
 			<div>
@@ -16,14 +19,18 @@
 					<td>Type</td>
 					<td>Price</td>
 					<td>Amount</td>
+					<td>Update</td>
+					<td>Delete</td>
 				</tr>
 			</div>
-			<div th:each="car : ${listCar}">
+			<div th:each="car : *{listCar}">
 				<tr>
 					<td th:text="${car.brand}"></td>
 					<td th:text="${car.type}"></td>
 					<td th:text="${car.price}"></td>
 					<td th:text="${car.amount}"></td>
+					<td><a th:href="@{/car/update/{id}(id=${car.id})}">Update car</a></td>
+					<td><a th:href="@{/car/delete/{id}(id=${car.id})}">Delete car</a></td>
 				</tr>
 			</div>
 		</table>

@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 
 public interface CarDb extends JpaRepository<CarModel, Long>{
 	CarModel findByType(String type);
+	List<CarModel> findByDealerIdOrderByPriceAsc(long dealerId);
 }
