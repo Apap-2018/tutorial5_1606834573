@@ -22,7 +22,8 @@ public class DealerController {
 	private CarService carService;
 	
 	@RequestMapping("/")
-	private String home() {
+	private String home(Model model) {
+		model.addAttribute("pageTitle", "Home");
 		return "home";
 	}
 	

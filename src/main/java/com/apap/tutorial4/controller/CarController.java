@@ -60,5 +60,13 @@ public class CarController {
 	private String deleteCar(@PathVariable(value = "idCar") Long carId) {
 		carService.deleteCarById(carId);
 		return "delete";
-	}	
+	}
+	
+	@RequestMapping(value="/car/delete", method = RequestMethod.POST)
+	private String delete(@ModelAttribute DealerModel dealer, Model model) {
+		for (CarModel car: dealer.getListCar()) {
+			carService.deleteCar(car.getId());
+		}
+		return "delete-car";
+	}
 }

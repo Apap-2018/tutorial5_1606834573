@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 	<head>
-		<title>View Dealer</title>
+		<title th:replace="fragments/fragment :: headerFragment('View Dealer')"></title>
+		<object th:include="fragments/fragment :: css" th:remove="tag"></object>
+		<object th:include="fragments/fragment :: js" th:remove="tag"></object>		
 	</head>
 
 	<body>
+		<nav th:replace="fragments/fragment :: navbar"></nav>
 		<h3 th:text="'Alamat: ' + ${dealer.alamat}"></h3>
 		<h3 th:text="'Telepon: ' + ${dealer.noTelp}"></h3>
 		<br>
@@ -12,28 +15,36 @@
 		<a th:href="@{/dealer/update/{id}(id=${dealer.id})}">Update dealer</a>
 		
 		<h3 th:text="'List Mobil'"></h3>
-		<table border="1">
-			<div>
-				<tr>
-					<td>Brand</td>
-					<td>Type</td>
-					<td>Price</td>
-					<td>Amount</td>
-					<td>Update</td>
-					<td>Delete</td>
-				</tr>
-			</div>
-			<div th:each="car : *{listCar}">
-				<tr>
-					<td th:text="${car.brand}"></td>
-					<td th:text="${car.type}"></td>
-					<td th:text="${car.price}"></td>
-					<td th:text="${car.amount}"></td>
-					<td><a th:href="@{/car/update/{id}(id=${car.id})}">Update car</a></td>
-					<td><a th:href="@{/car/delete/{id}(id=${car.id})}">Delete car</a></td>
-				</tr>
-			</div>
-		</table>
+				<form th:action="@{/car/delete}" th:object="${dealer}" method="POST">
+			<table class="text-center">
+				<thead>
+					<tr>
+						<th>No.</th>
+						<th>Brand</th>
+						<th>Type</th>
+						<th>Price</th>
+						<th>Amount</th>
+						<th>Delete</th>
+						<th>Update</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="car,iterationStatus : *{listCar}">
+						<td th:text="${iterationStatus.count}"></td>
+						<td th:text="${car.brand}"></td>
+						<td th:text="${car.type}"></td>
+						<td th:text="${car.price} >= 100000 ? 'Di ats 100K' : 'Di bwh 100K'"></td>
+						<td th:text="${car.amount}"></td>
+						<td>
+							<input type="checkbox" th:field="*{listCar}" th:value="${car.id}" />
+							<label th:for="${#ids.prev('listCar')}">Hapus</label>
+						</td>
+						<td><a th:href="@{/car/update/{id}(id=${car.id})}">Update car</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<button type="submit">Hapus yang dipilih</button>
+		</form>
 		<br>
 		</br>
 		<a th:href="@{/car/add/{id}(id=${dealer.id})}">Add car</a>
